@@ -13,14 +13,26 @@ FILED_TO_KEEP = [
     "state",
 ]
 
+
+LAT = [23, 50]
+LONG = [-132, -64]
+
 json_file = json.load(open(FILE))
-reduced_json_file = deepcopy(json_file)
+
+reduced_json_file = {
+    "type":"FeatureCollection",
+    "features": []
+}
 
 for idx, e in enumerate(json_file["features"]):
-    print(idx)
+    e_reduced = deepcopy(e)
     for k in e["properties"].keys():
         if k not in FILED_TO_KEEP:
-            del reduced_json_file["features"][idx]["properties"][k]
+            del e_reduced["properties"][k]
+
+    if LAT[0] < float(e["properties"]["INTPTLAT10"]) < LAT[1] and LONG[0] < float(e["properties"]["INTPTLON10"]) < LONG[1]:
+        reduced_json_file["features"].append(e_reduced)
+
 
 with open(f"reduced.{FILE}", "w+") as f:
     json.dump(reduced_json_file, f)
