@@ -1,8 +1,8 @@
 import json
 from copy import deepcopy
 
-FILE = 'county.geo.json'
-FILED_TO_KEEP = [
+FILE = 'county-50mo.geo.json'
+FIELED_TO_KEEP = [
     "STATEFP10",
     "COUNTYFP10",
     "GEOID10",
@@ -27,7 +27,7 @@ reduced_json_file = {
 for idx, e in enumerate(json_file["features"]):
     e_reduced = deepcopy(e)
     for k in e["properties"].keys():
-        if k not in FILED_TO_KEEP:
+        if k not in FIELED_TO_KEEP:
             del e_reduced["properties"][k]
 
     if LAT[0] < float(e["properties"]["INTPTLAT10"]) < LAT[1] and LONG[0] < float(e["properties"]["INTPTLON10"]) < LONG[1]:
@@ -35,4 +35,4 @@ for idx, e in enumerate(json_file["features"]):
 
 
 with open(f"reduced.{FILE}", "w+") as f:
-    json.dump(reduced_json_file, f)
+    json.dump(reduced_json_file, f, separators=(',', ':'))
